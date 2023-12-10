@@ -15,6 +15,8 @@ const Poll: React.FC<IProps> = ({waku}) => {
     title: "",
     author: "",
     content: "",
+    created_at: "",
+    upvotes: 0,
   });
   const [livePosts, setLivePosts] = useState<IPost[]>([]);
 
@@ -33,7 +35,17 @@ const Poll: React.FC<IProps> = ({waku}) => {
     // Send the vote using the Waku network
     createPost(waku, postContent);
   };
-
+  function removeDuplicatesByPostId(posts: IPost[]): IPost[] {
+    const uniquePostIds = new Set<string>();
+    return posts.filter((post) => {
+      if (!uniquePostIds.has(post.post_id)) {
+        uniquePostIds.add(post.post_id);
+        return true;
+      }
+      console.log(uniquePostIds);
+      return false;
+    });
+  }
   // Process a received vote into the vote counts state
   const processReceivedPosts = (postMessage: IPost) => {
     // Check if the post_id is not in livePosts before appending
@@ -64,6 +76,8 @@ const Poll: React.FC<IProps> = ({waku}) => {
       title: "",
       author: "",
       content: "",
+      upvotes: 0,
+      created_at: "",
     });
 
     // Handle the post
@@ -75,6 +89,7 @@ const Poll: React.FC<IProps> = ({waku}) => {
       console.log("Poll: Listening for votes");
       await retrieveExistingVotes(waku, processReceivedPosts);
       await receiveVotes(waku, processReceivedPosts);
+      removeDuplicatesByPostId(livePosts);
     };
 
     subscribeToVotes();
@@ -85,7 +100,7 @@ const Poll: React.FC<IProps> = ({waku}) => {
       <div className="text-white">
         <h2 className="text-2xl mb-4">Live Posts</h2>
 
-        <form onSubmit={handleSubmit} className="mb-4">
+        <form onSubmit={handleSubmit} className="mb-4 text-black">
           <label className="block mb-2">
             Title:
             <input
@@ -128,9 +143,10 @@ const Poll: React.FC<IProps> = ({waku}) => {
 
         <ul>
           {livePosts.map((post) => (
-            <li key={post.post_id} className="mb-2">
+            <li key={post.post_id} className="mb-2 text-white">
               {/* Render each post item */}
-              {post.content}
+              {post.content} {post.author}
+              {post.created_at} {post.post_id}
             </li>
           ))}
         </ul>

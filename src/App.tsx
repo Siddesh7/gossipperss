@@ -6,6 +6,8 @@ import type {LightNode} from "@waku/sdk";
 
 import {createNode} from "./waku";
 import Poll from "./post";
+import {ConnectButton} from "@rainbow-me/rainbowkit";
+import Video from "./video";
 
 const App: React.FC = () => {
   const [wakuNode, setWakuNode] = useState<LightNode | null>(null);
@@ -22,8 +24,15 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
+      {/* <div>
+        <ConnectButton />
+      </div> */}
       {wakuNode ? (
-        <Poll waku={wakuNode} />
+        <div>
+          {" "}
+          <Poll waku={wakuNode} />
+          <Video />
+        </div>
       ) : (
         <div className="bg-black flex justify-center pt-40 text-xl space-x-3 items-center animate-pulse">
           <svg

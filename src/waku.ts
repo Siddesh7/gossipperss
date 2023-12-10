@@ -11,7 +11,7 @@ import {
 
 import {IPost, Post} from "./proto";
 
-const contentTopic = "/gossiperssss/90090000";
+const contentTopic = "/gossiperssss/073";
 
 const encoder = createEncoder({contentTopic});
 const decoder = createDecoder(contentTopic);
